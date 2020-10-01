@@ -78,7 +78,7 @@ def train_val_loaders(sentences, labels, train_prop = 0.9, batch_size = 32, max_
 
 
 def train(model, data, labels, train_prop = 0.9, batch_size = 32, max_length = 64, 
-          epochs = 2, random_seed = None):
+          epochs = 2, random_seed = None, device = torch.device("cuda")):
 
     train_dataloader, eval_dataloader = train_val_loaders(data, 
                                                         labels, 
@@ -194,7 +194,8 @@ def train(model, data, labels, train_prop = 0.9, batch_size = 32, max_length = 6
     print()
 
 
-def predict(model, sentences, labels, batch_size = 32, max_length = 32):
+def predict(model, sentences, labels, batch_size = 32, max_length = 32, 
+	        device = torch.device("cuda")):
    
     # preprocess sentences
     input_ids, attention_masks, labels = encode_sentences(sentences, labels, max_length)
