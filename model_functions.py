@@ -1,18 +1,10 @@
-import os
-import wget
-import itertools
-import re
-import time
-import datetime
 import random
 import torch
 import numpy as np
-import pandas as pd
-import tensorflow as tf
 
 from torch.utils.data import TensorDataset, random_split
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
-from transformers import BertTokenizer, BertForSequenceClassification, AdamW, BertConfig, get_linear_schedule_with_warmup
+from transformers import BertTokenizer, AdamW, BertConfig, get_linear_schedule_with_warmup
 
 
 # Function to calculate the accuracy of our predictions vs labels
@@ -249,53 +241,3 @@ def predict(model, sentences, labels, batch_size = 32, max_length = 32):
         labels = list(labels.numpy())
 
     return predictions, labels
-
-
-if __init__:
-
-    if torch.cuda.is_available():    
-
-        # Tell PyTorch to use the GPU.    
-        device = torch.device("cuda")
-
-        print('There are %d GPU(s) available.' % torch.cuda.device_count())
-
-        print('We will use the GPU:', torch.cuda.get_device_name(0))
-
-    # If not...
-    else:
-        print('No GPU available, using the CPU instead.')
-        device = torch.device("cpu")
-
-    model = BertForSequenceClassification.from_pretrained(
-        "bert-base-uncased", # Use the 12-layer BERT model, with an uncased vocab.
-        num_labels = 2, # The number of output labels--2 for binary classification.
-                        # You can increase this for multi-class tasks.   
-        output_attentions = False, # Whether the model returns attentions weights.
-        output_hidden_states = False) # Whether the model returns all hidden-states.
-
-    # Tell pytorch to run this model on the GPU.
-    model.cuda();
-
-    sentences = ['the cat sat on her tail', 
-                 'I love the moon',
-                 "I don't know what people thought about that tonight"]
-    labels = [0,1,1]
-
-    train(model, sentences, labels, train_prop = 0.9, batch_size = 32, max_length = 64, 
-              epochs = 2, random_seed = 42)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
