@@ -177,13 +177,13 @@ def train(model, data, labels, train_prop = 0.9, batch_size = 32, max_length = 6
             # 3. Forward pass (feed input data through the network)
             # stop calculating gradients
             with torch.no_grad():
-      
-              # 4. Compute loss on our validation data and track variables for monitoring progress
-              # (forward pass)
-              loss, logits = model(batch_input_ids, 
-                                   token_type_ids = None, 
-                                   attention_mask = batch_input_mask,
-                                   labels = batch_labels)
+        
+                # 4. Compute loss on our validation data and track variables for monitoring progress
+                # (forward pass)
+                loss, logits = model(batch_input_ids, 
+                                     token_type_ids = None, 
+                                     attention_mask = batch_input_mask,
+                                     labels = batch_labels)
             
             total_eval_loss += loss.item()
       
