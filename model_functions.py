@@ -185,13 +185,13 @@ def train(model, data, labels, train_prop = 0.9, batch_size = 32, max_length = 6
       
             total_eval_accuracy += flat_accuracy(logits, label_ids)
 
-    # average validation loss and Accuracy
-    avg_eval_accuracy = total_eval_accuracy / len(eval_dataloader)
-    avg_eval_loss = total_eval_loss / len(eval_dataloader)
-
-    print('Validation Loss:', round(avg_eval_loss, 2))
-    print('Validation Accuracy:', round(avg_eval_accuracy, 2))
-    print()
+        # average validation loss and Accuracy
+        avg_eval_accuracy = total_eval_accuracy / len(eval_dataloader)
+        avg_eval_loss = total_eval_loss / len(eval_dataloader)
+    
+        print('Validation Loss:', round(avg_eval_loss, 2))
+        print('Validation Accuracy:', round(avg_eval_accuracy, 2))
+        print()
 
 
 def predict(model, sentences, labels, batch_size = 32, max_length = 32, 
