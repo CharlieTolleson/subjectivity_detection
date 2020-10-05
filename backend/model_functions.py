@@ -57,35 +57,35 @@ def train_val_loaders(sentences, labels, tokenizer, val_split = True, train_prop
     dataset = TensorDataset(input_ids, attention_masks, labels)
     
     if val_split:
-	    # Calculate the number of samples to include in each set.
-	    train_size = int(train_prop * len(dataset))
-	    val_size = len(dataset) - train_size
-	    
-	    # Divide the dataset by randomly selecting samples.
-	    train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
+        # Calculate the number of samples to include in each set.
+        train_size = int(train_prop * len(dataset))
+        val_size = len(dataset) - train_size
+        
+        # Divide the dataset by randomly selecting samples.
+        train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-	    # train dataloader
-	    train_dataloader = DataLoader(train_dataset,
-	                                  sampler = RandomSampler(train_dataset),
-	                                  batch_size = batch_size)
+        # train dataloader
+        train_dataloader = DataLoader(train_dataset,
+                                      sampler = RandomSampler(train_dataset),
+                                      batch_size = batch_size)
 
-	    validation_dataloader = DataLoader(val_dataset,
-	                                       sampler = SequentialSampler(val_dataset),
-	                                       batch_size = batch_size)
+        validation_dataloader = DataLoader(val_dataset,
+                                           sampler = SequentialSampler(val_dataset),
+                                           batch_size = batch_size)
 
-    	return train_dataloader, validation_dataloader
+        return train_dataloader, validation_dataloader
 
     else:
-    	# train dataloader
-	    train_dataloader = DataLoader(dataset,
-	                                  sampler = RandomSampler(dataset),
-	                                  batch_size = batch_size)
+        # train dataloader
+        train_dataloader = DataLoader(dataset,
+                                      sampler = RandomSampler(dataset),
+                                      batch_size = batch_size)
 
-	    return train_dataloader, None
+        return train_dataloader, None
 
 
 def train(model, data, labels, tokenizer, val_split = True, train_prop = 0.9, batch_size = 32, 
-	      max_length = 64, epochs = 2, random_seed = None, device = torch.device("cuda")):
+          max_length = 64, epochs = 2, random_seed = None, device = torch.device("cuda")):
 
     train_dataloader, eval_dataloader = train_val_loaders(data, 
                                                         labels,
@@ -169,43 +169,43 @@ def train(model, data, labels, tokenizer, val_split = True, train_prop = 0.9, ba
         model.eval()
 
         if val_split:
-	        for batch in eval_dataloader:
-	      
-	            # 1,2. Unpack our data inputs and labels and load onto GPU (device)
-	            batch_input_ids = batch[0].to(device)
-	            batch_input_mask = batch[1].to(device)
-	            batch_labels = batch[2].to(device)
-	      
-	            # 3. Forward pass (feed input data through the network)
-	            # stop calculating gradients
-	            with torch.no_grad():
-	        
-	                # 4. Compute loss on our validation data and track variables for monitoring progress
-	                # (forward pass)
-	                loss, logits = model(batch_input_ids, 
-	                                     token_type_ids = None, 
-	                                     attention_mask = batch_input_mask,
-	                                     labels = batch_labels)
-	            
-	            total_eval_loss += loss.item()
-	      
-	            # Move logits and labels to
-	            logits = logits.detach().cpu().numpy()
-	            label_ids = batch_labels.to('cpu').numpy()
-	      
-	            total_eval_accuracy += flat_accuracy(logits, label_ids)
+            for batch in eval_dataloader:
+          
+                # 1,2. Unpack our data inputs and labels and load onto GPU (device)
+                batch_input_ids = batch[0].to(device)
+                batch_input_mask = batch[1].to(device)
+                batch_labels = batch[2].to(device)
+          
+                # 3. Forward pass (feed input data through the network)
+                # stop calculating gradients
+                with torch.no_grad():
+            
+                    # 4. Compute loss on our validation data and track variables for monitoring progress
+                    # (forward pass)
+                    loss, logits = model(batch_input_ids, 
+                                         token_type_ids = None, 
+                                         attention_mask = batch_input_mask,
+                                         labels = batch_labels)
+                
+                total_eval_loss += loss.item()
+          
+                # Move logits and labels to
+                logits = logits.detach().cpu().numpy()
+                label_ids = batch_labels.to('cpu').numpy()
+          
+                total_eval_accuracy += flat_accuracy(logits, label_ids)
 
-	        # average validation loss and Accuracy
-	        avg_eval_accuracy = total_eval_accuracy / len(eval_dataloader)
-	        avg_eval_loss = total_eval_loss / len(eval_dataloader)
-	    
-	        print('Validation Loss:', round(avg_eval_loss, 2))
-	        print('Validation Accuracy:', round(avg_eval_accuracy, 2))
-	    print()
+            # average validation loss and Accuracy
+            avg_eval_accuracy = total_eval_accuracy / len(eval_dataloader)
+            avg_eval_loss = total_eval_loss / len(eval_dataloader)
+        
+            print('Validation Loss:', round(avg_eval_loss, 2))
+            print('Validation Accuracy:', round(avg_eval_accuracy, 2))
+        print()
 
 
 def predict(model, sentences, labels, tokenizer, batch_size = 32, max_length = 32, 
-	        device = torch.device("cuda")):
+            device = torch.device("cuda")):
    
     # preprocess sentences
     input_ids, attention_masks, labels = encode_sentences(sentences, labels, max_length, tokenizer)
