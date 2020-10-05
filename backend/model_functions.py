@@ -4,7 +4,7 @@ import numpy as np
 
 from torch.utils.data import TensorDataset, random_split
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
-from transformers import AdamW, BertConfig, get_linear_schedule_with_warmup
+from transformers import AdamW, get_linear_schedule_with_warmup
 
 
 # Function to calculate the accuracy of our predictions vs labels
@@ -79,7 +79,8 @@ def train(model, data, labels, tokenizer, train_prop = 0.9, batch_size = 32, max
           epochs = 2, random_seed = None, device = torch.device("cuda")):
 
     train_dataloader, eval_dataloader = train_val_loaders(data, 
-                                                        labels, 
+                                                        labels,
+                                                        tokenizer, 
                                                         train_prop, 
                                                         batch_size, 
                                                         max_length)
